@@ -3,27 +3,32 @@
 #include <stdio.h>
 
 #define rep(i, l, u) for (int i = l; i < u; i++)
+#define print(m, n) printf("%s: %d\n", m, d)
 
 int arrivalTime[4] = {0, 0, 2, 5},
-    burst1[4] = {3, 2, 1, 2},
-    burst2[4] = {2, 1, 2, 1},
-    IO[4] = {2, 4, 3, 2};
+    burstTime[4] = {3, 2, 1, 2},
+    remainingTime[5] = {3, 2, 1, 2, 1000};
 
-int minBurst(int arr[])
+int time, remainingJobs = 4, smallest, i;
+
+void *scheduler()
 {
-    int i, min = 1000, j = 0;
-    rep(i, 0, 4)
+    for (time = 0; remainingJobs > 0; time++)
     {
-        if (arr[i] < min)
+        smallest = 5;
+        rep(i, 0, 4)
         {
-            min = arr[i];
-            j = i
+            if (arrivalTime[i] <= time && remainingTime[i] < remainingTime[smallest] && remainingTime[i] > 0)
+                smallest = i;
         }
+        remainingTime[smallest]--;
+        if (remainingTime[smallest] == 0)
+            remainingJobs--;
     }
-    return j;
 }
 
-void scheduler()
+int main()
 {
-    int mBurst = minBurst(burst1);
+    pthread_t schedule_thread;
+    pthread_create(&schedule_thread, NULL, &scheduler, NULL);
 }
